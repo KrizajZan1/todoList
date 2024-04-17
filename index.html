@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Task List</title>
+    <style>
+      body {
+        background-color: gray;
+      }
+      .todolist {
+        position: absolute;
+        left: 40%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="todolist">
+      <h1>To-do List</h1>
+      <p>Write your new task in the field below.</p>
+
+      <input
+        type="text"
+        id="taskInput"
+        placeholder="Enter task"
+        onkeypress="enter(event)"
+      />
+      <button onclick="addTask()">Add Task</button>
+
+      <p>Here are your tasks to complete:</p>
+      <ul id="taskList"></ul>
+
+      <p>Here are your tasks that you have completed already:</p>
+      <ul id="completedTasks"></ul>
+    </div>
+
+    <script>
+      function enter(event) {
+        if (event.key === "Enter") {
+          addTask();
+        }
+      }
+      function addTask() {
+        var taskInput = document.getElementById("taskInput");
+        var taskList = document.getElementById("taskList");
+        var completedTasks = document.getElementById("completedTasks");
+        var taskText = taskInput.value;
+
+        if (taskText !== "") {
+          var li = document.createElement("li");
+          // Created checkbox element
+          var checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          // Created remove button. When clicked, li will be removed from ul
+          var rmBtn = document.createElement("button");
+          rmBtn.textContent = "Remove";
+          rmBtn.onclick = function () {
+            taskList.removeChild(li);
+          };
+          // Created edit button
+          var editBtn = document.createElement("button");
+          editBtn.textContent = "Edit";
+          editBtn.onclick = function () {
+            var originalTask = li.getAttribute("data-task");
+            var newTask = prompt("Change task: ", originalTask);
+            if (newTask !== null) {
+              li.textContent = newTask.trim();
+
+              // Set the updated task text as the new original task
+              li.setAttribute("data-task", newTask.trim());
+
+              li.appendChild(checkbox);
+              li.appendChild(document.createTextNode(" "));
+              li.append(rmBtn, " ", editBtn);
+            }
+          };
+
+          // Added checkbox, and remove/edit buttons to li, then added li to tasks
+          li.textContent = taskText;
+          li.setAttribute("data-task", taskText.trim());
+          li.appendChild(checkbox);
+          li.appendChild(document.createTextNode(" "));
+          li.append(rmBtn, " ", editBtn);
+          taskList.appendChild(li);
+
+          taskInput.value = "";
+        } else {
+          window.alert("Empty space != task :)");
+        }
+      }
+      document.addEventListener("change", function (event) {
+        var checkbox = event.target;
+        if (checkbox.type === "checkbox" && checkbox.checked) {
+          // If checkbox is checked, move the task to completedTasks list
+          var taskItem = checkbox.parentElement;
+          var completedTasks = document.getElementById("completedTasks");
+          completedTasks.appendChild(taskItem);
+        }
+      });
+    </script>
+  </body>
+</html>
