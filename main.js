@@ -1,41 +1,43 @@
 // Function for adding tasks via "Enter" key
 function enter(event) {
-  if (event.key === 'Enter') {
+  if (event.key === "Enter") {
     addTask();
   }
 }
 
 // Function to add a new task
 function addTask() {
-  const taskInput = document.getElementById('taskInput');
-  const taskText = taskInput.value.trim();
-  if (taskText !== '') {
-    const newTask = createNewTask(taskText);
-    document.getElementById('currentTasks').appendChild(newTask);
-    taskInput.value = '';
+  var taskInput = document.getElementById("taskInput");
+  var taskText = taskInput.value;
+  if (taskText !== "") {
+    var newTask = createNewTask(taskText);
+    document.getElementById("currentTasks").appendChild(newTask);
+    taskInput.value = "";
+  } else {
+    window.alert("Please enter valid task.");
   }
 }
 
 // Function to create a new task item
 function createNewTask(taskText) {
-  const newTask = document.createElement('li');
+  var newTask = document.createElement("li");
   newTask.textContent = taskText;
 
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.addEventListener('change', function () {
+  var checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.addEventListener("change", function () {
     moveTask(newTask, checkbox.checked);
   });
 
-  const editBtn = document.createElement('button');
-  editBtn.textContent = 'Edit';
-  editBtn.addEventListener('click', function () {
+  var editBtn = document.createElement("button");
+  editBtn.textContent = "Edit";
+  editBtn.addEventListener("click", function () {
     editTask(newTask);
   });
 
-  const deleteBtn = document.createElement('button');
-  deleteBtn.textContent = 'Delete';
-  deleteBtn.addEventListener('click', function () {
+  var deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "Delete";
+  deleteBtn.addEventListener("click", function () {
     deleteTask(newTask);
   });
 
@@ -46,10 +48,10 @@ function createNewTask(taskText) {
   return newTask;
 }
 
-// Function to move a task between current and completed lists
+// Function to move tasks between current and completed lists
 function moveTask(newTask, completed) {
-  const currentTasksList = document.getElementById('currentTasks');
-  const completedTasksList = document.getElementById('completedTasks');
+  var currentTasksList = document.getElementById("currentTasks");
+  var completedTasksList = document.getElementById("completedTasks");
 
   if (completed) {
     completedTasksList.appendChild(newTask);
@@ -58,15 +60,39 @@ function moveTask(newTask, completed) {
   }
 }
 
-// Function to edit a task
+// Function to edit tasks
 function editTask(newTask) {
-  const newText = prompt('Edit task:', newTask.textContent);
-  if (newText !== null) {
+  var newText = prompt("Edit task:", newTask.taskText);
+  if (newText !== "") {
     newTask.textContent = newText.trim();
+
+    var checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.addEventListener("change", function () {
+      moveTask(newTask, checkbox.checked);
+    });
+
+    var editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.addEventListener("click", function () {
+      editTask(newTask);
+    });
+
+    var deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.addEventListener("click", function () {
+      deleteTask(newTask);
+    });
+
+    newTask.appendChild(checkbox);
+    newTask.appendChild(editBtn);
+    newTask.appendChild(deleteBtn);
+  } else {
+    newTask.remove();
   }
 }
 
-// Function to delete a task
+// Function to delete tasks
 function deleteTask(newTask) {
   newTask.remove();
 }
