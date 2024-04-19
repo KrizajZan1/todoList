@@ -11,8 +11,9 @@ function addTask() {
   var taskText = taskInput.value;
   if (taskText !== "") {
     var newTask = createNewTask(taskText);
-    document.getElementById("currentTasks").appendChild(newTask);
+    document.getElementById("activeTasks").appendChild(newTask);
     taskInput.value = "";
+    saveData();
   } else {
     window.alert("Please enter valid task.");
   }
@@ -45,18 +46,19 @@ function createNewTask(taskText) {
   newTask.appendChild(editBtn);
   newTask.appendChild(deleteBtn);
 
+  saveData();
   return newTask;
 }
 
 // Function to move tasks between current and completed lists
 function moveTask(newTask, completed) {
-  var currentTasksList = document.getElementById("currentTasks");
+  var activeTasksList = document.getElementById("activeTasks");
   var completedTasksList = document.getElementById("completedTasks");
 
   if (completed) {
     completedTasksList.appendChild(newTask);
   } else {
-    currentTasksList.appendChild(newTask);
+    activeTasksList.appendChild(newTask);
   }
 }
 
@@ -87,6 +89,8 @@ function editTask(newTask) {
     newTask.appendChild(checkbox);
     newTask.appendChild(editBtn);
     newTask.appendChild(deleteBtn);
+
+    saveData();
   } else {
     newTask.remove();
   }
@@ -95,4 +99,19 @@ function editTask(newTask) {
 // Function to delete tasks
 function deleteTask(newTask) {
   newTask.remove();
+}
+
+function saveData() {
+  var activeTasksList = document.getElementById("activeTasks");
+  var tasks = activeTasksList.getElementsByTagName("li");
+  var taskTexts = [];
+  for (var i = 0; i < tasks.length; i++) {
+    taskTexts.push(tasks[i].textContent);
+  }
+  localStorage.setItem("tasks", JSON.stringify(taskTexts));
+}
+
+function loadData() {
+  localStorage.getItem("tasks");
+  console.log("value loaded succesfully");
 }

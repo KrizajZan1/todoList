@@ -13,7 +13,7 @@
       }
     </style>
   </head>
-  <body>
+  <body onload="loadData()">
     <div class="todolist">
       <h1>To-do List</h1>
       <p>Write your new task in the field below.</p>
@@ -27,7 +27,7 @@
       <button onclick="addTask()">Add Task</button>
 
       <p>Here are your tasks to complete:</p>
-      <ul id="currentTasks"></ul>
+      <ul id="activeTasks"></ul>
 
       <p>Here are your tasks that you have completed already:</p>
       <ul id="completedTasks"></ul>
