@@ -13,7 +13,7 @@ function addTask() {
     var newTask = createNewTask(taskText);
     document.getElementById("activeTasks").appendChild(newTask);
     taskInput.value = "";
-    saveData();
+    saveData(); // Save data after adding a new task
   } else {
     window.alert("Please enter valid task.");
   }
@@ -22,13 +22,16 @@ function addTask() {
 // Function to create a new task item
 function createNewTask(taskText) {
   var newTask = document.createElement("li");
-  newTask.textContent = taskText;
 
   var checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.addEventListener("change", function () {
     moveTask(newTask, checkbox.checked);
+    saveData(); // Save data after moving the task
   });
+
+  var taskTextElement = document.createElement("span");
+  taskTextElement.textContent = taskText;
 
   var editBtn = document.createElement("button");
   editBtn.textContent = "Edit";
@@ -42,11 +45,11 @@ function createNewTask(taskText) {
     deleteTask(newTask);
   });
 
+  newTask.appendChild(taskTextElement);
   newTask.appendChild(checkbox);
   newTask.appendChild(editBtn);
   newTask.appendChild(deleteBtn);
 
-  saveData();
   return newTask;
 }
 
@@ -64,54 +67,54 @@ function moveTask(newTask, completed) {
 
 // Function to edit tasks
 function editTask(newTask) {
-  var newText = prompt("Edit task:", newTask.taskText);
-  if (newText !== "") {
-    newTask.textContent = newText.trim();
-
-    var checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.addEventListener("change", function () {
-      moveTask(newTask, checkbox.checked);
-    });
-
-    var editBtn = document.createElement("button");
-    editBtn.textContent = "Edit";
-    editBtn.addEventListener("click", function () {
-      editTask(newTask);
-    });
-
-    var deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Delete";
-    deleteBtn.addEventListener("click", function () {
-      deleteTask(newTask);
-    });
-
-    newTask.appendChild(checkbox);
-    newTask.appendChild(editBtn);
-    newTask.appendChild(deleteBtn);
-
-    saveData();
-  } else {
+  var newText = prompt("Edit task:", newTask.querySelector("span").textContent);
+  if (newText !== null && newText.trim() !== "") {
+    newTask.querySelector("span").textContent = newText.trim();
+    saveData(); // Save data after editing the task
+  } else if (newText === "") {
+    // If newText is an empty string, remove the task
     newTask.remove();
+    saveData(); // Save data after deleting the task
   }
 }
 
 // Function to delete tasks
 function deleteTask(newTask) {
   newTask.remove();
+  saveData(); // Save data after deleting the task
 }
 
+// Function to save tasks data to localStorage
 function saveData() {
-  var activeTasksList = document.getElementById("activeTasks");
-  var tasks = activeTasksList.getElementsByTagName("li");
-  var taskTexts = [];
-  for (var i = 0; i < tasks.length; i++) {
-    taskTexts.push(tasks[i].textContent);
-  }
-  localStorage.setItem("tasks", JSON.stringify(taskTexts));
+  var tasks = [];
+  var taskElements = document.querySelectorAll("#activeTasks li, #completedTasks li");
+
+  taskElements.forEach(function(task) {
+    tasks.push({
+      text: task.querySelector("span").textContent,
+      completed: task.parentElement.id === "completedTasks"
+    });
+  });
+
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
+// Function to load tasks data from localStorage
 function loadData() {
-  localStorage.getItem("tasks");
-  console.log("value loaded succesfully");
+  var tasks = JSON.parse(localStorage.getItem("tasks"));
+
+  if (tasks != "") {
+    tasks.forEach(function(task) {
+      var newTask = createNewTask(task.text);
+      if (task.completed) {
+        document.getElementById("completedTasks").appendChild(newTask);
+        newTask.querySelector("input[type=checkbox]").checked = true;
+      } else {
+        document.getElementById("activeTasks").appendChild(newTask);
+      }
+    });
+  }
 }
+
+// Call the loadData function when the page loads
+window.addEventListener("load", loadData);
