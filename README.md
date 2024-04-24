@@ -40,6 +40,8 @@ Bonus: Task Reordering:
 
 Implement drag-and-drop functionality to reorder the tasks.
 This can be done using the HTML5 Drag and Drop API or a library like SortableJS.
+
+
 Enhanced Interactive To-Do List Exercise
 Objective: Expand the interactive to-do list to include more complex JavaScript features such as loops, array operations, and logic operators.
 
