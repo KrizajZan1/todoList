@@ -5,7 +5,7 @@ function enter(event) {
   }
 }
 
-// Function to add a new task
+// ADDING TASKS:
 function addTask() {
   var taskInput = document.getElementById("taskInput");
   var taskText = taskInput.value;
@@ -13,22 +13,17 @@ function addTask() {
     var newTask = createNewTask(taskText);
     document.getElementById("activeTasks").appendChild(newTask);
     taskInput.value = "";
-    saveData(); // Save data after adding a new task
+    saveData();
   } else {
     window.alert("Please enter valid task.");
   }
 }
 
-// Function to create a new task item
+// CREATING NEW TASK ITEMS:
+
 function createNewTask(taskText) {
   var newTask = document.createElement("li");
-
-  var checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.addEventListener("change", function () {
-    moveTask(newTask, checkbox.checked);
-    saveData(); // Save data after moving the task
-  });
+  newTask.draggable = "true";
 
   var taskTextElement = document.createElement("span");
   taskTextElement.textContent = taskText;
@@ -45,15 +40,27 @@ function createNewTask(taskText) {
     deleteTask(newTask);
   });
 
+  var checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.addEventListener("change", function () {
+    moveTask(newTask, checkbox.checked);
+    saveData();
+  });
+
+  var taskControls = document.createElement("div");
+  taskControls.classList.add("task-controls");
+  taskControls.appendChild(checkbox);
+  taskControls.appendChild(editBtn);
+  taskControls.appendChild(deleteBtn);
+
   newTask.appendChild(taskTextElement);
-  newTask.appendChild(checkbox);
-  newTask.appendChild(editBtn);
-  newTask.appendChild(deleteBtn);
+  newTask.appendChild(taskControls);
 
   return newTask;
 }
 
-// Function to move tasks between current and completed lists
+// MOVING TASKS:
+
 function moveTask(newTask, completed) {
   var activeTasksList = document.getElementById("activeTasks");
   var completedTasksList = document.getElementById("completedTasks");
@@ -65,46 +72,51 @@ function moveTask(newTask, completed) {
   }
 }
 
-// Function to edit tasks
+// EDITING TASKS:
+
 function editTask(newTask) {
   var newText = prompt("Edit task:", newTask.querySelector("span").textContent);
   if (newText !== null && newText.trim() !== "") {
     newTask.querySelector("span").textContent = newText.trim();
-    saveData(); // Save data after editing the task
+    saveData();
   } else if (newText === "") {
-    // If newText is an empty string, remove the task
     newTask.remove();
-    saveData(); // Save data after deleting the task
+    saveData();
   }
 }
 
-// Function to delete tasks
+// DELETING TASKS:
+
 function deleteTask(newTask) {
   newTask.remove();
-  saveData(); // Save data after deleting the task
+  saveData();
 }
 
-// Function to save tasks data to localStorage
+// SAVING TASKS:
+
 function saveData() {
   var tasks = [];
-  var taskElements = document.querySelectorAll("#activeTasks li, #completedTasks li");
+  var taskElements = document.querySelectorAll(
+    "#activeTasks li, #completedTasks li"
+  );
 
-  taskElements.forEach(function(task) {
+  taskElements.forEach(function (task) {
     tasks.push({
       text: task.querySelector("span").textContent,
-      completed: task.parentElement.id === "completedTasks"
+      completed: task.parentElement.id === "completedTasks",
     });
   });
 
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-// Function to load tasks data from localStorage
+// LOADING TASKS:
+
 function loadData() {
   var tasks = JSON.parse(localStorage.getItem("tasks"));
 
   if (tasks != "") {
-    tasks.forEach(function(task) {
+    tasks.forEach(function (task) {
       var newTask = createNewTask(task.text);
       if (task.completed) {
         document.getElementById("completedTasks").appendChild(newTask);
@@ -116,5 +128,33 @@ function loadData() {
   }
 }
 
-// Call the loadData function when the page loads
 window.addEventListener("load", loadData);
+
+// REORDERING TASKS:
+
+function initializeSortableLists() {
+  const activeTasksList = document.getElementById("activeTasks");
+  const completedTasksList = document.getElementById("completedTasks");
+
+  const activeTasksSortable = new Sortable(activeTasksList, {
+    group: "tasks",
+    animation: 150,
+    onUpdate: function (event) {
+      saveReorderedTasks(event.from.id, event.to.id);
+    },
+  });
+
+  const completedTasksSortable = new Sortable(completedTasksList, {
+    group: "tasks",
+    animation: 150,
+    onUpdate: function (event) {
+      saveReorderedTasks(event.from.id, event.to.id);
+    },
+  });
+
+  function saveReorderedTasks(fromId, toId) {
+    saveData({ from: fromId, to: toId });
+  }
+}
+
+initializeSortableLists();

@@ -3,34 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <title>Task List</title>
-    <style>
-      body {
-        background-color: gray;
-      }
-      .todolist {
-        position: absolute;
-        left: 40%;
-      }
-    </style>
+
+    <!-- Linking CSS with HTML-->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Importing sortable library for moving tasks? -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
   </head>
   <body>
     <div class="todolist">
-      <h1>To-do List</h1>
-      <p>Write your new task in the field below.</p>
+      <div class="greetings">
+        <h1>To-do List</h1>
+        <p>Write your new task in the field below.</p>
+      </div>
 
-      <input
-        type="text"
-        id="taskInput"
-        placeholder="Enter task"
-        onkeypress="enter(event)"
-      />
-      <button onclick="addTask()">Add Task</button>
+      <div class="input">
+        <input
+          type="text"
+          id="taskInput"
+          placeholder="Enter task"
+          onkeypress="enter(event)"
+        />
+        <button id="addTask" onclick="addTask()">Add Task</button>
+      </div>
 
-      <h1>Here are your tasks to complete:</h1>
-      <ul id="activeTasks"></ul>
+      <div class="activeTasks">
+        <h1>Here are your tasks to complete:</h1>
+        <ul id="activeTasks"></ul>
+      </div>
 
-      <h1>Here are your tasks that you have completed already:</h1>
-      <ul id="completedTasks"></ul>
+      <div class="completedTasks">
+        <h1>Here are your already completed tasks:</h1>
+        <ul id="completedTasks"></ul>
+      </div>
     </div>
 
     <script src="main.js"></script>
