@@ -22,18 +22,19 @@
           type="text"
           id="taskInput"
           placeholder="Enter task"
+          maxlength="40"
           onkeypress="enter(event)"
         />
         <button id="addTask" onclick="addTask()">Add Task</button>
       </div>
 
       <div class="activeTasks">
-        <h1>Here are your tasks to complete:</h1>
+        <h1>Tasks to complete:</h1>
         <ul id="activeTasks"></ul>
       </div>
 
       <div class="completedTasks">
-        <h1>Here are your already completed tasks:</h1>
+        <h1>Already completed Tasks:</h1>
         <ul id="completedTasks"></ul>
       </div>
     </div>

@@ -34,7 +34,7 @@ input[type="text"] {
 #addTask {
   padding: 10px 20px;
   background-color: #2c6c78;
-  color: #fff;
+  color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -53,7 +53,7 @@ input[type="checkbox"] {
 button {
   padding: 10px 20px;
   background-color: #afdde5;
-  color: #fff;
+  color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -61,7 +61,7 @@ button {
 }
 
 button:hover {
-  background-color: #003135;
+  background-color: #2c6c78;
 }
 
 h1 {
