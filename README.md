@@ -1,4 +1,4 @@
-# todoList.javascript
+# todoList
 To-do list project creatim
 Advanced DOM Manipulation Exercise: Interactive To-Do List
 
